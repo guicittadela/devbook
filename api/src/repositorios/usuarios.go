@@ -3,6 +3,7 @@ package repositorios
 import (
 	"api/src/modelos"
 	"database/sql"
+	"fmt"
 )
 
 type usuarios struct {
@@ -21,7 +22,7 @@ func (repositorio usuarios) Criar(usuario modelos.Usuario) (uint64, error) {
 	}
 
 	defer statement.Close()
-
+	fmt.Println(usuario.Nome)
 	resultado, erro := statement.Exec(usuario.Nome, usuario.Nick, usuario.Email, usuario.Senha)
 	if erro != nil {
 		return 0, erro
