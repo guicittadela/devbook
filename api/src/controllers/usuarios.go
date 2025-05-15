@@ -161,6 +161,15 @@ func DeletarUsuario(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
+	usuarioIDNoToken, erro := autenticacao.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+	if usuarioIDNoToken != ID {
+		respostas.Erro(w, http.StatusForbidden, errors.New("impossivel deletar outro usuario"))
+		return
+	}
 
 	db, erro := banco.Conectar()
 
