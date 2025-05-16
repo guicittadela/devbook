@@ -30,15 +30,18 @@ func CriarPublicacao(w http.ResponseWriter, r *http.Request) {
 	if erro = json.Unmarshal(corpoRequisicao, &publicacao); erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 	}
+
 	publicacao.AutorID = usuarioID
 	if erro = publicacao.Preparar(); erro != nil {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
+
 	db, erro := banco.Conectar()
 	if erro != nil {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 	}
+	defer db.Close()
 
 	repositorio := repositorios.NovoRepositorioPublicacao(db)
 	ID, erro := repositorio.Criar(publicacao)
@@ -49,7 +52,24 @@ func CriarPublicacao(w http.ResponseWriter, r *http.Request) {
 	respostas.JSON(w, http.StatusCreated, publicacao)
 }
 func BuscarPublicacoes(w http.ResponseWriter, r *http.Request) {
+	ID, erro := autenticacao.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+	}
+	defer db.Close()
 
+	repositorio := repositorios.NovoRepositorioPublicacao(db)
+	publicacoes, erro := repositorio.BuscarPublicacoes(ID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	respostas.JSON(w, http.StatusOK, publicacoes)
 }
 func BuscarPublicacao(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
