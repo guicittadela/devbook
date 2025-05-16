@@ -1,0 +1,33 @@
+package rotas
+
+import (
+	"api/src/controllers"
+	"net/http"
+)
+
+var rotasPublicacoes = []Rota{
+	{
+		URI:                "/publicacoes",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.BuscarPublicacoes,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/publicacoes/{publicacaoID}",
+		Metodo:             http.MethodGet,
+		Funcao:             controllers.BuscarPublicacao,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/publicacoes/{publicacaoID}",
+		Metodo:             http.MethodPut,
+		Funcao:             controllers.AtualizarPublicacao,
+		RequerAutenticacao: true,
+	},
+	{
+		URI:                "/publicacoes/{publicacaoID}",
+		Metodo:             http.MethodDelete,
+		Funcao:             controllers.DeletarPublicacao,
+		RequerAutenticacao: true,
+	},
+}
