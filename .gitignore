@@ -1,4 +1,4 @@
 .vscode/launch.json
 api/sql/dados.sql
-api/sql/sql.sql
+api/sql/bd.sql
 api/.env
