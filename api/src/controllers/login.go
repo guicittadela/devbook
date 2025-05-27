@@ -8,9 +8,9 @@ import (
 	"api/src/respostas"
 	"api/src/seguranca"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +42,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if erro = seguranca.VerificarSenha(usuarioBanco.Senha, usuario.Senha); erro != nil {
 		respostas.Erro(w, http.StatusUnauthorized, erro)
 	}
-	token, _ := autenticacao.CriarToken(usuarioBanco.ID)
-	fmt.Println(token)
+	token, erro := autenticacao.CriarToken(usuarioBanco.ID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
 
+	ID := strconv.FormatUint(usuarioBanco.ID, 10)
+	respostas.JSON(w, http.StatusOK, modelos.DadosAutenticacao{ID: ID, Token: token})
 }

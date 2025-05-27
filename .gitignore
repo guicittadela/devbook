@@ -2,3 +2,4 @@
 api/sql/dados.sql
 api/sql/bd.sql
 api/.env
+api/api
