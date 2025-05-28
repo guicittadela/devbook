@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    {{ template "cabecalho"}}
     <div class="container-login">
         <div>
             <form action="submit" class="devbook-form" id="formulario-cadastro">
@@ -32,8 +33,8 @@
             </form>
         </div>
     </div>
-    <script src="/assets/js/jquery.js"></script>
-    <script src="/assets/js/cadastro.js"></script>
+    {{template "rodape" }}
+    {{ template "scripts"}}
 </body>
 
 </html>
