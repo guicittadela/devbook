@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"web/src/config"
+	"web/src/cookies"
 	"web/src/modelos"
 	"web/src/requisicoes"
 	"web/src/respostas"
@@ -22,7 +24,6 @@ func PaginaCadastroDeUsuario(w http.ResponseWriter, r *http.Request) {
 func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 	url := fmt.Sprintf("%s/publicacoes", config.APIURL)
 	response, erro := requisicoes.RequisicaoComAutenticacao(r, http.MethodGet, url, nil)
-
 	if erro != nil {
 		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{ErroAPI: erro.Error()})
 		return
@@ -39,6 +40,15 @@ func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 		respostas.JSON(w, http.StatusUnprocessableEntity, respostas.ErroAPI{ErroAPI: erro.Error()})
 		return
 	}
-	fmt.Println(response.StatusCode, erro)
-	utils.ExecutarTemplate(w, "home.html", publicacoes)
+
+	cookie, _ := cookies.Ler(r)
+	usuarioID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
+	utils.ExecutarTemplate(w, "home.html", struct {
+		Publicacoes []modelos.Publicacao
+		UsuarioID   uint64
+	}{
+		Publicacoes: publicacoes,
+		UsuarioID:   usuarioID,
+	})
 }
