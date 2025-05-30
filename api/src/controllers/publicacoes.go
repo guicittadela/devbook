@@ -190,7 +190,7 @@ func DeletarPublicacao(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	respostas.JSON(w, http.StatusNoContent, "publicação deletada")
+	respostas.JSON(w, http.StatusOK, "publicação deletada")
 }
 
 func BuscarPublicacaoPorUsuario(w http.ResponseWriter, r *http.Request) {
