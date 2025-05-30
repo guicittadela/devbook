@@ -19,7 +19,7 @@ function criarPublicacao(evento) {
     }).done(function() {
         window.location = "/home";
     }).fail(function() {
-        Swal.fire("Ops...", "Erro ao criar a publicação!", "error");
+        //Swal.fire("Ops...", "Erro ao criar a publicação!", "error");
     })
 }
 
@@ -44,7 +44,7 @@ function curtirPublicacao(evento) {
         elementoClicado.removeClass('curtir-publicacao');
 
     }).fail(function() {
-        Swal.fire("Ops...", "Erro ao curtir a publicação!", "error");
+        //Swal.fire("Ops...", "Erro ao curtir a publicação!", "error");
     }).always(function() {
         elementoClicado.prop('disabled', false);
     });
@@ -71,7 +71,7 @@ function descurtirPublicacao(evento) {
         elementoClicado.addClass('curtir-publicacao');
 
     }).fail(function() {
-        Swal.fire("Ops...", "Erro ao descurtir a publicação!", "error");
+        //Swal.fire("Ops...", "Erro ao descurtir a publicação!", "error");
     }).always(function() {
         elementoClicado.prop('disabled', false);
     });
@@ -90,12 +90,12 @@ function atualizarPublicacao() {
             conteudo: $('#conteudo').val()
         }
     }).done(function() {
-        Swal.fire('Sucesso!', 'Publicação criada com sucesso!', 'success')
+        /*Swal.fire('Sucesso!', 'Publicação criada com sucesso!', 'success')
             .then(function() {
                 window.location = "/home";
-            })
+            })*/
     }).fail(function() {
-        Swal.fire("Ops...", "Erro ao editar a publicação!", "error");
+        //Swal.fire("Ops...", "Erro ao editar a publicação!", "error");
     }).always(function() {
         $('#atualizar-publicacao').prop('disabled', false);
     })
@@ -127,7 +127,7 @@ function deletarPublicacao(evento) {
                 $(this).remove();
             });
         }).fail(function() {
-            Swal.fire("Ops...", "Erro ao excluir a publicação!", "error");
+            //Swal.fire("Ops...", "Erro ao excluir a publicação!", "error");
         });
     })
 

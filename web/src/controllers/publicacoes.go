@@ -89,3 +89,37 @@ func DescurtirPublicacao(w http.ResponseWriter, r *http.Request) {
 	}
 	respostas.JSON(w, response.StatusCode, nil)
 }
+
+func EditarPublicacao(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+
+	publicacaoID, erro := strconv.ParseUint(parametros["publicacaoID"], 10, 64)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{ErroAPI: erro.Error()})
+		return
+	}
+
+	r.ParseForm()
+
+	publicacao, erro := json.Marshal(map[string]string{
+		"titulo":   r.FormValue("titulo"),
+		"conteudo": r.FormValue("conteudo"),
+	})
+
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{ErroAPI: erro.Error()})
+		return
+	}
+
+	url := fmt.Sprintf("%s/publicacoes/%d", config.APIURL, publicacaoID)
+	response, erro := requisicoes.RequisicaoComAutenticacao(r, http.MethodPut, url, bytes.NewBuffer(publicacao))
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{ErroAPI: erro.Error()})
+		return
+	}
+	defer response.Body.Close()
+	if response.StatusCode >= 400 {
+		respostas.TratarStatusCodeDeErro(w, response)
+	}
+	respostas.JSON(w, response.StatusCode, nil)
+}
