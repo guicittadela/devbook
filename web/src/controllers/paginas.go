@@ -114,3 +114,28 @@ func PaginaDeUsuarios(w http.ResponseWriter, r *http.Request) {
 
 	utils.ExecutarTemplate(w, "usuarios.html", usuarios)
 }
+
+func CarregarPerfilUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{ErroAPI: erro.Error()})
+		return
+	}
+	usuario, erro := modelos.BuscarPerfilUsuario(usuarioID, r)
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{ErroAPI: erro.Error()})
+		return
+	}
+
+	cookie, _ := cookies.Ler(r)
+	usuarioLogadoID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
+	utils.ExecutarTemplate(w, "usuario.html", struct {
+		Usuario         modelos.Usuario
+		usuarioLogadoID uint64
+	}{
+		Usuario:         usuario,
+		usuarioLogadoID: usuarioLogadoID,
+	})
+}
