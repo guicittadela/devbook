@@ -133,9 +133,9 @@ func CarregarPerfilUsuario(w http.ResponseWriter, r *http.Request) {
 
 	utils.ExecutarTemplate(w, "usuario.html", struct {
 		Usuario         modelos.Usuario
-		usuarioLogadoID uint64
+		UsuarioLogadoID uint64
 	}{
 		Usuario:         usuario,
-		usuarioLogadoID: usuarioLogadoID,
+		UsuarioLogadoID: usuarioLogadoID,
 	})
 }
