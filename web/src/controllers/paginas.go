@@ -122,14 +122,18 @@ func CarregarPerfilUsuario(w http.ResponseWriter, r *http.Request) {
 		respostas.JSON(w, http.StatusBadRequest, respostas.ErroAPI{ErroAPI: erro.Error()})
 		return
 	}
+
+	cookie, _ := cookies.Ler(r)
+	usuarioLogadoID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+	if usuarioID == usuarioLogadoID {
+		http.Redirect(w, r, "/perfil", http.StatusFound)
+		return
+	}
 	usuario, erro := modelos.BuscarPerfilUsuario(usuarioID, r)
 	if erro != nil {
 		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{ErroAPI: erro.Error()})
 		return
 	}
-
-	cookie, _ := cookies.Ler(r)
-	usuarioLogadoID, _ := strconv.ParseUint(cookie["id"], 10, 64)
 
 	utils.ExecutarTemplate(w, "usuario.html", struct {
 		Usuario         modelos.Usuario
@@ -138,4 +142,17 @@ func CarregarPerfilUsuario(w http.ResponseWriter, r *http.Request) {
 		Usuario:         usuario,
 		UsuarioLogadoID: usuarioLogadoID,
 	})
+}
+
+func CarregarPerfilLogado(w http.ResponseWriter, r *http.Request) {
+	cookies, _ := cookies.Ler(r)
+	usuarioID, _ := strconv.ParseUint(cookies["id"], 10, 64)
+
+	usuario, erro := modelos.BuscarPerfilUsuario(usuarioID, r)
+	if erro != nil {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{ErroAPI: erro.Error()})
+		return
+	}
+
+	utils.ExecutarTemplate(w, "perfil.html", usuario)
 }
