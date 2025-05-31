@@ -156,3 +156,18 @@ func CarregarPerfilLogado(w http.ResponseWriter, r *http.Request) {
 
 	utils.ExecutarTemplate(w, "perfil.html", usuario)
 }
+
+func PaginaEdicaoUsuario(w http.ResponseWriter, r *http.Request) {
+	cookies, _ := cookies.Ler(r)
+	usuarioID, _ := strconv.ParseUint(cookies["id"], 10, 64)
+
+	canal := make(chan modelos.Usuario)
+	go modelos.BuscarDadoUsuario(canal, usuarioID, r)
+	usuario := <-canal
+
+	if usuario.ID == 0 {
+		respostas.JSON(w, http.StatusInternalServerError, respostas.ErroAPI{ErroAPI: "Erro ao buscar o usuário"})
+		return
+	}
+	utils.ExecutarTemplate(w, "editar-usuario.html", usuario)
+}
