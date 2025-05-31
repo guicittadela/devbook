@@ -171,3 +171,7 @@ func PaginaEdicaoUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.ExecutarTemplate(w, "editar-usuario.html", usuario)
 }
+
+func PaginaAtulizarSenha(w http.ResponseWriter, r *http.Request) {
+	utils.ExecutarTemplate(w, "atualizar-senha.html", nil)
+}
